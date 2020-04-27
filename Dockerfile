@@ -10,6 +10,9 @@ RUN go get -u -v github.com/golang/protobuf/protoc-gen-go \
 	github.com/mitchellh/mapstructure \
 	google.golang.org/grpc \
 	google.golang.org/grpc/reflection \
+	github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+	github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
+	github.com/golang/protobuf/protoc-gen-go \
 	golang.org/x/net/context \
 	github.com/go-chi/chi \
 	github.com/lithammer/fuzzysearch/fuzzy \

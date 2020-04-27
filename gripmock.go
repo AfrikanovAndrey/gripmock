@@ -21,6 +21,7 @@ func main() {
 	adminBindAddr := flag.String("admin-listen", "", "Adress the admin server will bind to. Default to localhost, set to 0.0.0.0 to use from another machine")
 	stubPath := flag.String("stub", "", "Path where the stub files are (Optional)")
 	imports := flag.String("imports", "/protobuf", "comma separated imports path. default path /protobuf is where gripmock Dockerfile install WKT protos")
+	goLibs := flag.String("go-libs", "", "comma separated go libs, that will be intalled by 'go get'")
 	// for backwards compatibility
 	if os.Args[1] == "gripmock" {
 		os.Args = append(os.Args[:1], os.Args[2:]...)
@@ -68,6 +69,8 @@ func main() {
 		output:      output,
 		imports:     importDirs,
 	})
+
+	installAdditionalGoLibs(strings.Split(*goLibs, ","))
 
 	// build the server
 	buildServer(output, protoPaths)
@@ -149,6 +152,18 @@ func buildServer(output string, protoPaths []string) {
 	err := build.Run()
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func installAdditionalGoLibs(libs []string) {
+	for _, lib := range libs {
+		sed := exec.Command("go", "get", "-i", lib)
+		sed.Stderr = os.Stderr
+		sed.Stdout = os.Stdout
+		err := sed.Run()
+		if err != nil {
+			log.Panic("Fail on install go lib", err)
+		}
 	}
 }
 
